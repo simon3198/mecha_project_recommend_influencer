@@ -1,0 +1,3 @@
+# mecha_project
+
+information
