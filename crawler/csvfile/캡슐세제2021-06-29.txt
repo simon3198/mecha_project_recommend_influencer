@@ -1,0 +1,31 @@
+,Title,Blogger,Post URL,Image num,Paragraph num,Comment num,Video num,weekly viewer mean
+0,캡슐세제 순하고 착한 에버블루,우리아기잘키우기,https://blog.naver.com/uryagi?Redirect=Log&logNo=222407673946,16,623,1,2,987.8
+1,캡슐 세탁세제 에버블루 성분 가성비 좋음,좋은사람님의 블로그,https://blog.naver.com/saiber44?Redirect=Log&logNo=222402717854,16,629,0,0,1014.6
+2,캡슐세제 추천 워시앤위시 색깔 옷 세탁 한번에,소소한 이야기,https://blog.naver.com/hyunsz_?Redirect=Log&logNo=222401583830,20,331,8,0,2886.4
+3,캡슐세제로 강력하고 간편하게 얼룩지우기! 퍼실디스크,즐거운 안녕희야 세상,https://blog.naver.com/happy_hworld?Redirect=Log&logNo=222407141025,24,549,7,1,13583.6
+4,캡슐세제추천 작지만 강한 워시앤위시,서밀리월드,https://blog.naver.com/s_emilly?Redirect=Log&logNo=222386562588,18,593,2,1,8682.8
+5,건조기 드라이시트 에버블루 캡슐세제 섬유유연제 써보니 좋네,먹고놀기 홍심,https://blog.naver.com/sas1023?Redirect=Log&logNo=222413404919,25,438,1,1,5338.4
+6,에버블루 캡슐세제 가성비 좋은 드라이시트와 함께해요,제이네 한별이,https://blog.naver.com/tbcatshj?Redirect=Log&logNo=222404544633,26,411,5,0,1343.4
+7,캡슐세제 워시앤위시는 3in1,도시로 가다.,https://blog.naver.com/ohmyjudy?Redirect=Log&logNo=222397279818,13,205,0,0,805.2
+8,에버블루 캡슐세제 드라이시트 성분 좋은 캡슐세제와 섬유유연제~,행복한 일상 저장소,https://blog.naver.com/jinizi76?Redirect=Log&logNo=222397792425,41,1009,0,2,7287.8
+9,카포드 캡슐세제 찌든때제거에 좋은 세탁세제 추천!,디자인하나봄,https://blog.naver.com/huchi0070?Redirect=Log&logNo=222369724315,21,578,3,1,6137
+10,캡슐세제 에버블루 프로클린으로 간편하게,아름답게 나이들기,https://blog.naver.com/moonbanji?Redirect=Log&logNo=222397854125,25,601,4,1,1143.2
+11,코스트코 퍼실 디스크캡슐세제 후기,영감얻은할머니,https://blog.naver.com/anjanjajaj?Redirect=Log&logNo=222397442842,21,382,8,0,3072
+12,캡슐세제의 간편세탁 신세계를 퍼실 디스크로 경험했어요!,오키로키'z 라이프로그,https://blog.naver.com/ego1982?Redirect=Log&logNo=222406645120,24,501,19,1,12543.6
+13,"아로퓸 세탁세제, 캡슐 한개면 충분해",오늘은 뭐 사먹지?,https://blog.naver.com/leedan2?Redirect=Log&logNo=222253468730,22,626,0,1,8855
+14,캡슐세제 부피 성능 모두 만족,mimi nail,https://blog.naver.com/mimi3704?Redirect=Log&logNo=222405473271,15,442,6,0,1086.8
+15,"빨래도 템빨 강화, 에버블루 캡슐세제 드라이시트",☆찻잔에 담는 세상,https://blog.naver.com/threeact?Redirect=Log&logNo=222401457408,14,521,17,2,2845.4
+16,캡슐세제추천 워시앤위시 간편하게 세탁하자,moonss blog.,https://blog.naver.com/haku1020?Redirect=Log&logNo=222349449304,15,253,0,0,857.6
+17,캡슐세탁세제 한 알로 빨래 끝,서밀리월드,https://blog.naver.com/s_emilly?Redirect=Log&logNo=222395373438,15,464,2,1,8682.8
+18,알러젠 FREE를 원한다면 엘모트 캡슐세제와 드라이시트로... ,즐거운 안녕희야 세상,https://blog.naver.com/happy_hworld?Redirect=Log&logNo=222354181119,21,479,1,1,13584.2
+19,가성비 캡슐세제 에버블루 드라이시트 함께 사용해요,mrs.woo's home story,https://blog.naver.com/dngusghk?Redirect=Log&logNo=222403535226,22,466,0,1,12917.4
+20,캡슐세제 많은 양의 빨래도 한번에 0912,유쾌한 일상 수다스러운 하루,https://blog.naver.com/theamiima?Redirect=Log&logNo=222140925389,20,660,1,0,2116.6
+21,카포드 캡슐세제 깔끔,빙구.,https://blog.naver.com/pabin?Redirect=Log&logNo=222399856920,14,375,2,0,2284.2
+22,캡슐세탁세제 올인원으로 간편하게 빨래 끝!,지구에 놀러 온 낯선여행자의 삶의 여정이야기,https://blog.naver.com/crystal_kim?Redirect=Log&logNo=222392878815,12,508,8,1,1382.8
+23,캡슐세제 워시앤위시 마카롱세제 이렇게 편할 수 있나,트윈블리의 Real_log,https://blog.naver.com/twinvely?Redirect=Log&logNo=222322489180,0,1,4,0,1383.6
+24,아로퓸 캡슐세제 하나 넣으니 빨래냄새제거 되는구나,바쁜 체리와 엄마,https://blog.naver.com/evgeneia_0214?Redirect=Log&logNo=222180667484,18,314,1,2,3102
+25,세탁세제 간편한 캡슐세제 워시앤위시 잔향까지 완벽해,★ 다다형제와 함께하는 일상★,https://blog.naver.com/83silverstar?Redirect=Log&logNo=222394130428,27,411,2,2,582
+26,캡슐세제 사용후기 에버블루 드라이시트,BON,https://blog.naver.com/49dbfl?Redirect=Log&logNo=222411298926,24,202,6,0,2618.8
+27,캡슐세탁세제 왓아릴리프 세상 편해,축복맘 스마일 축복이네 :),https://blog.naver.com/hisbyjj?Redirect=Log&logNo=222394720351,22,412,1,1,6601.8
+28,캡슐세제 간편한 세제 워시앤위쉬,위시,https://blog.naver.com/eunshilys?Redirect=Log&logNo=222325346082,12,211,0,1,1862.4
+29,캡슐세제 이염방지시트 워시앤위시로 해결!,추억기록,https://blog.naver.com/eunyoung97?Redirect=Log&logNo=222361552819,21,503,1,1,3725.4
