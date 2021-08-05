@@ -134,7 +134,6 @@ def score_blogger(itemname,data):
         #######################################################################
         # 명사/조사 가  2.4 이상이면 직접후기글과 비슷하다
         temp = round(noun_/josa,2)
-        print(itemname)
         temp = (temp-threshold_list[7][0])/threshold_list[7][1]
 
         # 이미지당 글자 수 계산
@@ -146,11 +145,7 @@ def score_blogger(itemname,data):
 
         # video score 많을 수록 감점
         if data['Video num'][num_]>0:
-            score += 1
-        if data['gif num'][num_]>0:
-            score += 0.8
-        if data['sticker num'][num_]>0:
-            score += 0.8
+            score += 10
 
         post_df_idx+=1
         if not isNaN(data['AD'][num_]) and ad ==1:
@@ -163,35 +158,36 @@ def score_blogger(itemname,data):
     final_score=0
     for i in range(len(final_list)):
         #keyword score
-        final_list[i][1]+=(final_list[i][8]-threshold_list[0][1])/threshold_list[0][0]
+        final_list[i][1]+=((final_list[i][8]-threshold_list[0][1])/threshold_list[0][0])*10
         #tfidf score
-        final_list[i][1]+=(final_list[i][9]-threshold_list[1][1])/threshold_list[1][0]
+        final_list[i][1]+=((final_list[i][9]-threshold_list[1][1])/threshold_list[1][0])*15
         #greammer score
         if final_list[i][-2]<1.96 and final_list[i][-2]>0:
-            final_list[i][1] += 1
+            final_list[i][1] += 5
         #paragraph num score
-        final_list[i][1]+=1-((final_list[i][-1]-threshold_list[2][1])/threshold_list[2][0])
+        final_list[i][1]+=(1-((final_list[i][-1]-threshold_list[2][1])/threshold_list[2][0]))*10
         #image num score
-        final_list[i][1]+=(final_list[i][2]-threshold_list[3][1])/threshold_list[3][0]
+        final_list[i][1]+=((final_list[i][2]-threshold_list[3][1])/threshold_list[3][0])*10
         #imgwrd num score
-        if final_list[i][-1]>-1.96 and final_list[i][-1]<0.5:
-            final_list[i][1] += 1
+        if final_list[i][-1]>-1.96 and final_list[i][-1]<0:
+            final_list[i][1] += 10
+        if final_list[i][-1]>=0 and final_list[i][-1]<0.5:
+            final_list[i][1] += 7
+        if final_list[i][-1]>=0.5 or final_list[i][-1]<=-1.96:
+            final_list[i][1] += 5
         #video num score
-        final_list[i][1]-=((final_list[i][3]-threshold_list[4][1])/threshold_list[4][0])
+        final_list[i][1]-=((final_list[i][3]-threshold_list[4][1])/threshold_list[4][0])*5
         #gif num score
-        final_list[i][1]+=-((final_list[i][-3]-threshold_list[5][1])/threshold_list[5][0])*0.2
+        final_list[i][1]+=((final_list[i][-3]-threshold_list[5][1])/threshold_list[5][0])*20
         #sticker num score
-        final_list[i][1]+=-((final_list[i][-2]-threshold_list[6][1])/threshold_list[6][0])*0.2
+        final_list[i][1]+=((final_list[i][-2]-threshold_list[6][1])/threshold_list[6][0])*15
         
         final_score += final_list[i][1]
     if len(final_list)!=0:
         final_score/=len(final_list)
-    
-    try:
-        week_view = final_list[0][6]
-    except:
-        week_view = -1
-    return ad,week_view, final_score
+    if final_score>=100:
+        final_score = 95
+    return ad, final_score
 
 
 

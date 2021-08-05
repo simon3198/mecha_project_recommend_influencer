@@ -263,12 +263,15 @@ class NaverBlogCrawler:
                                 break
                             
                             #OCR 이용해 이미지내 텍스트 추출후 미리 선정한 키워드와 대조 비교
-                            ad_img_response = requests.get(img_url)
-                            img = Image.open(io.BytesIO(ad_img_response.content))
-                            ad_text = pytesseract.image_to_string(img,lang='kor')
-                            ad_text.replace("\n"," ")
-                            ad_text.replace("\t"," ")
-                            main_text += ad_text
+                            try:
+                                ad_img_response = requests.get(img_url)
+                                img = Image.open(io.BytesIO(ad_img_response.content))
+                                ad_text = pytesseract.image_to_string(img,lang='kor')
+                                ad_text.replace("\n"," ")
+                                ad_text.replace("\t"," ")
+                                main_text += ad_text
+                            except:
+                                break
                             #광고성 단어 포함시 img_ad 
                             for keyword in self.keyword_list:
                                 if keyword in ad_text:
@@ -415,6 +418,7 @@ class NaverBlogCrawler:
                                 break
                             
                             #OCR 이용해 이미지내 텍스트 추출후 미리 선정한 키워드와 대조 비교
+                            ad_text=''
                             try:
                                 ad_img_response = requests.get(img_url)
                                 img = Image.open(io.BytesIO(ad_img_response.content))
