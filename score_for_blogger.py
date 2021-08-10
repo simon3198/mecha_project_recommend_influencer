@@ -158,7 +158,7 @@ def score_blogger(itemname,data):
     final_score=0
     for i in range(len(final_list)):
         #keyword score
-        final_list[i][1]+=((final_list[i][8]-threshold_list[0][1])/threshold_list[0][0])*10
+        final_list[i][1]+=((final_list[i][8]-threshold_list[0][1])/threshold_list[0][0])*5
         #tfidf score
         final_list[i][1]+=((final_list[i][9]-threshold_list[1][1])/threshold_list[1][0])*15
         #greammer score
@@ -176,7 +176,7 @@ def score_blogger(itemname,data):
         if final_list[i][-1]>=0.5 or final_list[i][-1]<=-1.96:
             final_list[i][1] += 5
         #video num score
-        final_list[i][1]-=((final_list[i][3]-threshold_list[4][1])/threshold_list[4][0])*5
+        final_list[i][1]-=((final_list[i][3]-threshold_list[4][1])/threshold_list[4][0])*10
         #gif num score
         final_list[i][1]+=((final_list[i][-3]-threshold_list[5][1])/threshold_list[5][0])*20
         #sticker num score

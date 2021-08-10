@@ -8,9 +8,9 @@ from urllib import parse
 def blog_crawler(blogid):
     page_num=0
     post_list =[]
+    post_num=0
     while True:
         flg=0
-        post_num=0
         page_num+=1
         link = f'https://blog.naver.com/PostTitleListAsync.naver?blogId={blogid}&viewdate=&currentPage={page_num}&categoryNo=0&parentCategoryNo=&countPerPage=30'
         response = requests.get(link)
@@ -35,13 +35,12 @@ def blog_crawler(blogid):
                     break
             except:
                 pass
-
+            
             try:
                 if int(date)==2020 and post_num==0:
                     post_num = page_num*30
             except:
                 pass
-
             title = re.search('"title":"(.+?)"', soup).group(1)
             title = parse.unquote(title)
             title = title.replace('+','')
@@ -51,7 +50,6 @@ def blog_crawler(blogid):
             post_list.append([link_,title])
         if flg ==1:
             break
-
     blogger_df = pd.DataFrame(post_list,columns=['Link','Title'])
     # blogger_df.to_csv('./blogger all post/'+blogid+'.csv')
     return post_num, blogger_df
