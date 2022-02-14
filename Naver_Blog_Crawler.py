@@ -1,3 +1,4 @@
+import bs4
 from selenium import webdriver
 import urllib.request
 import time
@@ -19,6 +20,8 @@ import pytesseract
 import io
 from PIL import Image
 import json
+from urllib.request import urlopen
+from time import sleep
 
 class NaverBlogCrawler:
     
@@ -26,9 +29,9 @@ class NaverBlogCrawler:
         self.itemname = _itemname
         self.blog_url_list = _blog_url_list
         if _itemname:
-            self.post_df = pd.DataFrame(columns=("Title","Blogger","Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category'))
+            self.post_df = pd.DataFrame(columns=("Title","Blogger","Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
         elif _blog_url_list:
-            self.post_df = pd.DataFrame(columns=("Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category'))
+            self.post_df = pd.DataFrame(columns=("Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
         else:
             self.post_df = None
 
@@ -91,6 +94,26 @@ class NaverBlogCrawler:
         else:
             comment_num = 0
         return comment_num
+    
+    def getCommentDetail(self,nick_name,post_detail):
+        try:
+            commnet_url = 'https://m.blog.naver.com/CommentList.naver?blogId='+nick_name+'&logNo='+post_detail
+            
+            driver = webdriver.Chrome("./chromedriver")
+            driver.implicitly_wait(10)
+            driver.get(commnet_url)
+            
+            element = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "u_cbox_contents")))
+            html = driver.page_source
+            soup = BeautifulSoup(html,'html.parser')
+            comment_raw_list = soup.select('.u_cbox_contents')
+            comment_list=[]
+            for n in comment_raw_list:
+                comment_list.append(n.text.strip())
+        except:
+            comment_list=[]
+        
+        return comment_list
     
     # 해당 블로그의 본문 내용을 크롤링 하기 위해 #mainframe 안 링크로 접속
     def getInnerIFrameSoup(self,post_link):
@@ -220,6 +243,13 @@ class NaverBlogCrawler:
 
             #           아이디
             nick_name = re.search("blogId=(.+)&logNo",I_post_link).group(1)
+            post_detail = re.search("logNo=(.+)&redirect",I_post_link).group(1)
+            
+            #           댓글 내용
+            if int(comment_num) > 0:
+                comment_detail = self.getCommentDetail(nick_name,post_detail)     
+            else:
+                comment_detail=0
 
             #          공감 수
             symp_num = self.getSympnum(nick_name,I_post_link)
@@ -312,7 +342,7 @@ class NaverBlogCrawler:
                 posting_date = ''
             
             
-            self.post_df.loc[post_df_idx] = [post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category]
+            self.post_df.loc[post_df_idx] = [post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category,comment_detail]
             post_df_idx+=1
             #print("-"*50)
         return self.post_df
@@ -375,7 +405,14 @@ class NaverBlogCrawler:
 
             #           아이디
             nick_name = re.search("blogId=(.+)&logNo",I_post_link).group(1)
+            post_detail = re.search("logNo=(.+)&redirect",I_post_link).group(1)
 
+            #           댓글 내용
+            if int(comment_num) > 0:
+                comment_detail = self.getCommentDetail(nick_name,post_detail)
+            else:
+                comment_detail=0
+            print(comment_detail)
             #          공감 수
             symp_num = self.getSympnum(nick_name,I_post_link)
 
@@ -468,7 +505,7 @@ class NaverBlogCrawler:
                 posting_date = ''
             
             
-            self.post_df.loc[post_df_idx] = [post_title,post_writer,post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category]
+            self.post_df.loc[post_df_idx] = [post_title,post_writer,post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category,comment_detail]
             post_df_idx+=1
             #print("-"*50)
 
@@ -478,19 +515,28 @@ class NaverBlogCrawler:
         return self.post_df
 
 def run():  
-    start = time.time()   
-    item_name = input("상품명을 검색하시오: ")
+    start = time.time()
+    print("1: 상품명 2: url")
+    choice = int(input())
+    if choice == 1:
+        item_name = input("상품명을 검색하시오: ")
 
-    crawler = NaverBlogCrawler(item_name)
-    post_df = crawler.getPostDataFrame_FromItemName()
-    print("interval : ",time.time()-start)
+        crawler = NaverBlogCrawler(item_name)
+        post_df = crawler.getPostDataFrame_FromItemName()
+        print("interval : ",time.time()-start)
 
-    item_name=item_name.replace("\"","")
-    item_name=item_name.replace("+","")
-    post_df.to_csv('./crawler/csvfile/'+item_name+date.today().isoformat()+'.csv')
+        item_name=item_name.replace("\"","")
+        item_name=item_name.replace("+","")
+        post_df.to_csv('./crawler/csvfile/'+item_name+date.today().isoformat()+'.csv')
 
-    pd.set_option('display.max_rows',None)
-    pd.set_option('display.max_columns',None)
-    post_df
+        pd.set_option('display.max_rows',None)
+        pd.set_option('display.max_columns',None)
+        post_df
+    else:
+        crawler = NaverBlogCrawler()
+        temp = ['https://blog.naver.com/ese2698?Redirect=Log&logNo=222222309546', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222215476747', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222389737785', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222162573731', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222171243977', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222147097494']
+        crawler = NaverBlogCrawler(_blog_url_list = temp)
+        df = crawler.getPostDataFrame_blogUrls()
+        print(df['Comment detail'])
 if __name__ == '__main__':
     run()

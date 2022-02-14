@@ -14,7 +14,6 @@ item_list = ['보석십자수', '미니어처', '펀치 니들', '3d펜', '3d프
 print(len(item_list))
 blogger_list = pd.read_csv('./crawler/revu_id_list.csv')
 blogger_list = blogger_list['0'].tolist()
-
 print(len(blogger_list))
 final_score_list=[]
 for blogger_name in blogger_list:
@@ -27,13 +26,16 @@ for blogger_name in blogger_list:
         category = []
         if data['Link'].count() <= 100:
             continue
-
+        link_list=[]
         for item in item_list:
             item = item.replace(' ','')
             item_bool = data['Title'].apply(lambda x: item in x)
             item_df = data[item_bool]
             # final_df = final_df.join(pd.Series(list(item_df['Link'])).rename(item), how='right')
             final_df[item] = list(item_df['Link'])
+            # link_list.extend(list(item_df['Link']))
+        # link_df = pd.DataFrame(link_list,columns=['Link'])
+        # link_df.to_csv('./blogger score/'+blogger_name+'.csv')
         score_list=[]
         for item in item_list:
             temp = item.replace(' ','')

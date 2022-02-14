@@ -56,8 +56,6 @@ def blog_crawler(blogid):
 
 # https://report.revu.net/service/campaigns/428897
 
-
-
 # blogger_list =['duswk75','amaim30','kyakya_4001']
 # for blogger in blogger_list:
 #     blog_crawler(blogger)
