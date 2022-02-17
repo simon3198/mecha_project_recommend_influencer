@@ -21,6 +21,7 @@ from score_for_blogger import score_blogger
 import re
 import requests
 import xml.etree.ElementTree as ET
+import sys
 
 if __name__ == '__main__':
     from sympy import det
@@ -42,8 +43,8 @@ if __name__ == '__main__':
     # wait=WebDriverWait(driver,5)
 
     
-    # revu_id = 'wc0426@naver.com'
-    # revu_pswd = 'sysy8659!'
+    revu_id = 'wc0426@naver.com'
+    revu_pswd = 'sysy8659!'
     button = driver.find_elements_by_xpath('//*[@id="app"]/div/div/div[2]/span[1]')
     button[0].click()
 
@@ -64,7 +65,6 @@ if __name__ == '__main__':
     influencer_choice.click()
     more_button = driver.find_element_by_xpath('//*[@id="pick-list"]/div[3]/span')
     more_button.click()
-    print(more_button)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     num=29
     while True:
@@ -97,9 +97,13 @@ if __name__ == '__main__':
     id_list = set(id_list)
     id_list = list(id_list)
     print(len(id_list))
-    print(id_list)
-    id_list = pd.DataFrame(id_list)
-    id_list.to_csv('./datas/revu_id_list.csv')
+    
+    if len(id_list)==30:
+        print('오류가 발생하였습니다. 다시 시도해주세요')
+        sys.exit()
+    
+    # id_list = pd.DataFrame(id_list)
+    # id_list.to_csv('./datas/revu_id_list.csv')
 
     #DIY,컴퓨터부품, 커넥터 제거 52-3=49
     item_list = ['보석십자수', '미니어처', '펀치 니들', '3d펜', '3d프린터', '가죽공예', '가방 만들기', '양모펠트', '프랑스 자수', '스크래치 북','LED조명', '무드등', '칼림바', '오르골', '발난로', '우산', '캡슐 세제','전자저울', '산소포화도 측정기', '소음 측정기', '거리 측정기', '온습도계', '적외선 온도계', '높이 측정기', '타이머', '유수분 측정기','아두이노', '라즈베리 파이', '마이크로 비트','휴대용선풍기','스피커','디퓨저','기저귀','파우치','운동화','청소세제','로봇청소기','전동칫솔','수납박스','청소포','에어프라이어','거북목베개','컵홀더','공기청정기','진공청소기','자외선차단제','섬유유연제','가습기','마우스패드']
