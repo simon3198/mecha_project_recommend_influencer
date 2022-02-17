@@ -100,7 +100,7 @@ if __name__ == '__main__':
     if len(id_list)==30:
         print('오류가 발생하였습니다. 다시 시도해주세요')
         sys.exit()
-    
+    blogger_list=id_list
     id_list = pd.DataFrame(id_list)
     id_list.to_csv('./datas/revu_id_list.csv')
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     # blogger_list = pd.read_csv('./revu_id_list.csv')
     # blogger_list = blogger_list['0'].tolist()
     
-    blogger_list=id_list
+    
     
     final_score_list=[]
 
