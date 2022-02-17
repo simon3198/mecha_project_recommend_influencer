@@ -24,85 +24,85 @@ import sys
 
 if __name__ == '__main__':
     
-    # id_list=[]
+    id_list=[]
 
-    # link= input('revu link를 입력해주세요 : ')
-    # revu_id=input('revu id를 입력해주세요 : ')
-    # revu_pswd=input('revu password를 입력해주세요 : ')
-    # # link_list= ['https://report.revu.net/service/campaigns/422541']
-    # # ,'https://report.revu.net/service/campaigns/428897','https://report.revu.net/service/campaigns/422036','https://report.revu.net/service/campaigns/422023','https://report.revu.net/service/campaigns/420573','https://report.revu.net/service/campaigns/420573','https://report.revu.net/service/campaigns/420568','https://report.revu.net/service/campaigns/420183','https://report.revu.net/service/campaigns/418579','https://report.revu.net/service/campaigns/417204','https://report.revu.net/service/campaigns/415463','https://report.revu.net/service/campaigns/388108']
+    link= input('revu link를 입력해주세요 : ')
+    revu_id=input('revu id를 입력해주세요 : ')
+    revu_pswd=input('revu password를 입력해주세요 : ')
+    # link_list= ['https://report.revu.net/service/campaigns/422541']
+    # ,'https://report.revu.net/service/campaigns/428897','https://report.revu.net/service/campaigns/422036','https://report.revu.net/service/campaigns/422023','https://report.revu.net/service/campaigns/420573','https://report.revu.net/service/campaigns/420573','https://report.revu.net/service/campaigns/420568','https://report.revu.net/service/campaigns/420183','https://report.revu.net/service/campaigns/418579','https://report.revu.net/service/campaigns/417204','https://report.revu.net/service/campaigns/415463','https://report.revu.net/service/campaigns/388108']
 
-    # # link = link_list[0]
+    # link = link_list[0]
 
-    # options = Options()
-    # options.page_load_strategy = 'normal'
-    # driver = webdriver.Chrome("./chromedriver")
-    # driver.get(link)
-    # driver.implicitly_wait(10)
-    # # wait=WebDriverWait(driver,5)
+    options = Options()
+    options.page_load_strategy = 'normal'
+    driver = webdriver.Chrome("./chromedriver")
+    driver.get(link)
+    driver.implicitly_wait(10)
+    # wait=WebDriverWait(driver,5)
 
     
-    # # revu_id = 'wc0426@naver.com'
-    # # revu_pswd = 'sysy8659!'
-    # button = driver.find_elements_by_xpath('//*[@id="app"]/div/div/div[2]/span[1]')
-    # button[0].click()
+    # revu_id = 'wc0426@naver.com'
+    # revu_pswd = 'sysy8659!'
+    button = driver.find_elements_by_xpath('//*[@id="app"]/div/div/div[2]/span[1]')
+    button[0].click()
 
-    # login = driver.find_elements_by_css_selector('.form-input')
-    # login[0].send_keys(revu_id)
-    # login[1].send_keys(revu_pswd)
+    login = driver.find_elements_by_css_selector('.form-input')
+    login[0].send_keys(revu_id)
+    login[1].send_keys(revu_pswd)
 
-    # login_button = driver.find_element_by_css_selector('.btn.btn-revu')
-    # login_button.click()
-    # WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="app"]/div/div/div/div/div[2]')))
-    # try:
-    #     notice_close = driver.find_element_by_xpath('//*[@id="app"]/div/div/div/div/div[2]')
-    #     notice_close.click()
-    # except:
-    #     pass
+    login_button = driver.find_element_by_css_selector('.btn.btn-revu')
+    login_button.click()
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH,'//*[@id="app"]/div/div/div/div/div[2]')))
+    try:
+        notice_close = driver.find_element_by_xpath('//*[@id="app"]/div/div/div/div/div[2]')
+        notice_close.click()
+    except:
+        pass
 
-    # influencer_choice = driver.find_element_by_class_name('client-pick')
-    # influencer_choice.click()
-    # more_button = driver.find_element_by_xpath('//*[@id="pick-list"]/div[3]/span')
-    # more_button.click()
-    # driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    # num=29
-    # while True:
-    #     num+=30
-    #     try:
-    #         WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID,'requesting_'+str(num))))
-    #     except:
-    #         break
-    #     try:
-    #         more_button = driver.find_element_by_xpath('//*[@id="pick-list"]/div[3]/span')
-    #         more_button.click()
-    #     except:
-    #         break
-    # blogger_list = driver.find_elements_by_css_selector('.media-title [href]')
+    influencer_choice = driver.find_element_by_class_name('client-pick')
+    influencer_choice.click()
+    more_button = driver.find_element_by_xpath('//*[@id="pick-list"]/div[3]/span')
+    more_button.click()
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    num=29
+    while True:
+        num+=30
+        try:
+            WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.ID,'requesting_'+str(num))))
+        except:
+            break
+        try:
+            more_button = driver.find_element_by_xpath('//*[@id="pick-list"]/div[3]/span')
+            more_button.click()
+        except:
+            break
+    blogger_list = driver.find_elements_by_css_selector('.media-title [href]')
 
-    # num=-1
-    # for blogger in blogger_list:
-    #     num+=1
-    #     temp = blogger.get_attribute('href')
-    #     try:
-    #         if 'blog.naver.com' in temp:
-    #             temp = re.split('/',temp)[-1]
-    #         else:
-    #             temp = re.search('ttp://(.+?).blog.me', temp).group(1)
-    #     except:
-    #         continue
-    #     id_list.append(temp)
+    num=-1
+    for blogger in blogger_list:
+        num+=1
+        temp = blogger.get_attribute('href')
+        try:
+            if 'blog.naver.com' in temp:
+                temp = re.split('/',temp)[-1]
+            else:
+                temp = re.search('ttp://(.+?).blog.me', temp).group(1)
+        except:
+            continue
+        id_list.append(temp)
         
         
-    # id_list = set(id_list)
-    # id_list = list(id_list)
-    # print(len(id_list))
+    id_list = set(id_list)
+    id_list = list(id_list)
+    print(len(id_list))
     
-    # if len(id_list)==30:
-    #     print('오류가 발생하였습니다. 다시 시도해주세요')
-    #     sys.exit()
-    # blogger_list=id_list
-    # id_list = pd.DataFrame(id_list)
-    # id_list.to_csv('./datas/revu_id_list.csv')
+    if len(id_list)==30:
+        print('오류가 발생하였습니다. 다시 시도해주세요')
+        sys.exit()
+    blogger_list=id_list
+    id_list = pd.DataFrame(id_list)
+    id_list.to_csv('./datas/revu_id_list.csv')
 
     #DIY,컴퓨터부품, 커넥터 제거 52-3=49
     item_list = ['보석십자수', '미니어처', '펀치 니들', '3d펜', '3d프린터', '가죽공예', '가방 만들기', '양모펠트', '프랑스 자수', '스크래치 북','LED조명', '무드등', '칼림바', 
@@ -110,8 +110,8 @@ if __name__ == '__main__':
                  '유수분 측정기','아두이노', '라즈베리 파이', '마이크로 비트','휴대용선풍기','스피커','디퓨저','기저귀','파우치','운동화','청소세제','로봇청소기',
                  '전동칫솔','수납박스','청소포','에어프라이어','거북목베개','컵홀더','공기청정기','진공청소기','자외선차단제','섬유유연제','가습기','마우스패드']
 
-    blogger_list = pd.read_csv('./datas/revu_id_list.csv')
-    blogger_list = blogger_list['0'].tolist()
+    # blogger_list = pd.read_csv('./datas/revu_id_list.csv')
+    # blogger_list = blogger_list['0'].tolist()
     
     
     
@@ -163,7 +163,7 @@ if __name__ == '__main__':
             for comment in df['Comment detail']:
                 if comment != 0:
                     comment_list.extend(comment)
-            newdf.loc[blogger_name]=[comment_sum,comment_list,len(df.index)]
+            
             
             viewer_num_url = f'https://blog.naver.com/NVisitorgp4Ajax.nhn?blogId={blogger_name}'
             viewer_num_response = requests.get(viewer_num_url)
@@ -175,6 +175,7 @@ if __name__ == '__main__':
             score_list.append(data['Post URL'].count())
             score_list.insert(0,blogger_name)
             final_score_list.append(score_list)
+            newdf.loc[blogger_name]=[comment_sum,comment_list,len(df.index)]
             print(blogger_name,'success')
         except:
             print(blogger_name,'failed')
