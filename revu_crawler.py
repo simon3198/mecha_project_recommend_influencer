@@ -176,7 +176,7 @@ if __name__ == '__main__':
             print(blogger_name,'failed')
             pass
 
-    newdf.to_csv('blogger comment.csv')
+    newdf.to_csv('./datas/blogger comment.csv')
     item_list.insert(0,'blog id')
     final_score_df = pd.DataFrame(final_score_list,columns=item_list+['weekly view','2021 post num','5years post num'])
     final_score_df = final_score_df.set_index('blog id')

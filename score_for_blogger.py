@@ -46,7 +46,7 @@ def score_blogger(itemname,data):
     threshold_list.append([threshold_data['imgwrd mean'],threshold_data['imgwrd std']])
 
 
-    keyword_data = pd.read_csv('write.csv',header=None, error_bad_lines=False)
+    keyword_data = pd.read_csv('./datas/write.csv',header=None, error_bad_lines=False)
     keyword_data.set_index(0, inplace = True)
 
     ad_keyword_list = keyword_data.loc[itemname+'ad']
