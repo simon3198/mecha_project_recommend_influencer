@@ -1,83 +1,86 @@
-import bs4
+# from urllib import response
+# import bs4
 from selenium import webdriver
-import urllib.request
-import time
-from selenium.webdriver.common.keys import Keys
+# import urllib.request
+# import time
+# from selenium.webdriver.common.keys import Keys
 from bs4 import BeautifulSoup
 import pandas as pd
 import requests
 import time
 from datetime import date
 import re
-import xml.etree.ElementTree as ET
-import numpy as np
+# import xml.etree.ElementTree as ET
+# import numpy as np
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from konlpy.tag import Okt
-from collections import Counter
-import pytesseract
-import io
-from PIL import Image
+# from konlpy.tag import Okt
+# from collections import Counter
+# import pytesseract
+# import io
+# from PIL import Image
 import json
-from urllib.request import urlopen
-from time import sleep
+# from urllib.request import urlopen
+# from time import sleep
+import multiprocessing
 
 class NaverBlogCrawler:
     
     def __init__(self,_itemname=None,_blog_url_list = None):
         self.itemname = _itemname
         self.blog_url_list = _blog_url_list
-        if _itemname:
-            self.post_df = pd.DataFrame(columns=("Title","Blogger","Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
-        elif _blog_url_list:
-            self.post_df = pd.DataFrame(columns=("Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
-        else:
-            self.post_df = None
+        # if _itemname:
+        #     self.post_df = pd.DataFrame(columns=("Title","Blogger","Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
+        # elif _blog_url_list:
+        #     a=1
+        #     # self.post_df = pd.DataFrame(columns=("Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
+        # else:
+        #     self.post_df = None
 
         #광고성 글이라고 판단할 키워드 리스트
-        self.keyword_list = ['협찬','제공','증정','지원','원고료','회원가입','업체']
-        #광고성 글이 아니라고 판단할 키워드 리스트
-        self.notad_keyword_list = ['내돈내산','내돈','REAL']
+        # self.keyword_list = ['협찬','제공','증정','지원','원고료','회원가입','업체']
+        # #광고성 글이 아니라고 판단할 키워드 리스트
+        # self.notad_keyword_list = ['내돈내산','내돈','REAL']
         
     #크롬 드라이버로 특정 제품 검색 후 모든 블로그 글 area 스크롤
-    def getPostsByItem(self):
-        driver = webdriver.Chrome("./chromedriver")
-        driver.implicitly_wait(3)
+    # def getPostsByItem(self):
+    #     driver = webdriver.Chrome("./chromedriver")
+    #     driver.implicitly_wait(3)
 
-        #서치할 링크 만들기
-        item_search_url = f'https://search.naver.com/search.naver?query={self.itemname}&nso=&where=blog&sm=tab_opt'
+    #     #서치할 링크 만들기
+    #     item_search_url = f'https://search.naver.com/search.naver?query={self.itemname}&nso=&where=blog&sm=tab_opt'
 
-        #링크 접속
-        driver.get(item_search_url)
+    #     #링크 접속
+    #     driver.get(item_search_url)
 
-        #모든 블로그 글들을 로딩하기 위해 페이지 무한 스크롤
-        last_height=driver.execute_script("return document.body.scrollHeight")
-        # num=0
-        sp_blog=60
-        while True:
-            # 페이지 맨 아래로 스크롤바 이동
-            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-            try:
-                #페이지가 전부 로딩될때까지 wait
-                WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"#sp_blog_{sp_blog}")))
-            except:
-                break
-            # 새로운 스크롤 높이 저장후 기존 스크롤 높이와 비교        
-            new_height = driver.execute_script("return document.body.scrollHeight")
-            sp_blog+=30
-            #num+=1
-            # 더이상 로딩할 블로그가 없으면 break
-            if new_height == last_height:
-                    break
-            last_height = new_height
-        time.sleep(1)
+    #     #모든 블로그 글들을 로딩하기 위해 페이지 무한 스크롤
+    #     last_height=driver.execute_script("return document.body.scrollHeight")
+    #     # num=0
+    #     sp_blog=60
+    #     while True:
+    #         # 페이지 맨 아래로 스크롤바 이동
+    #         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    #         try:
+    #             #페이지가 전부 로딩될때까지 wait
+    #             WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CSS_SELECTOR, f"#sp_blog_{sp_blog}")))
+    #         except:
+    #             break
+    #         # 새로운 스크롤 높이 저장후 기존 스크롤 높이와 비교        
+    #         new_height = driver.execute_script("return document.body.scrollHeight")
+    #         sp_blog+=30
+    #         #num+=1
+    #         # 더이상 로딩할 블로그가 없으면 break
+    #         if new_height == last_height:
+    #                 break
+    #         last_height = new_height
+    #     # time.sleep(1)
 
-        #모든 블로그 글 area를 추출후 저장
-        req=driver.page_source
-        soup=BeautifulSoup(req,'html.parser')
-        posts = soup.find_all("div", attrs={"class":"total_area"})
-        return posts
+    #     #모든 블로그 글 area를 추출후 저장
+    #     req=driver.page_source
+    #     soup=BeautifulSoup(req,'html.parser')
+    #     posts = soup.find_all("div", attrs={"class":"total_area"})
+    #     return posts
 
     # 해당 포스트의 댓글 수 반환
     def getComment(self,soup):
@@ -181,338 +184,363 @@ class NaverBlogCrawler:
         return symp_num
     
     # 해당 포스트의 단어 리스트로 저장
-    def getNounList(self,_text):
-        splt = Okt()
-        noun = splt.nouns(_text)
+    # def getNounList(self,_text):
+    #     splt = Okt()
+    #     noun = splt.nouns(_text)
 
-        #의미 없는 조사는 제외
-        for i,v in enumerate(noun):
-            if v=='것'or v=='수' or v=='거' or v=='저':
-                noun.pop(i)
-        count = Counter(noun)
-        count_list = []
-        for text_count in count:
-            count_list.append(text_count)
-        return count_list
+    #     #의미 없는 조사는 제외
+    #     for i,v in enumerate(noun):
+    #         if v=='것'or v=='수' or v=='거' or v=='저':
+    #             noun.pop(i)
+    #     count = Counter(noun)
+    #     count_list = []
+    #     for text_count in count:
+    #         count_list.append(text_count)
+    #     return count_list
     
     def getPostLink(self,_soup):
         return _soup.find("a",attrs={"class":"api_txt_lines total_tit"})['href']
 
-    
     def getPostDataFrame_blogUrls(self):
-        post_df_idx=0
-        post_num = len(self.blog_url_list)
+        # pool = Pool(processes=4)
+        # pool.map(self.getPostDataFrame_blogUrls_,self.blog_url_list)
+        # print(self.post_df)
         
-        cur_post = 1
-        for post_link in self.blog_url_list:
-            print(f"\r{cur_post}/{post_num}",end='')
-            cur_post = cur_post + 1
-
-            try:
-                soup,I_post_link = self.getInnerIFrameSoup(post_link)
-                overlays = ".se-component.se-text.se-l-default"
-                contents = soup.select(overlays)
-                main_text = "".join([content.text for content in contents])
-                main_text = main_text.replace("\n","").replace("\t","")
-                text_num = len(main_text.split(" "))
-                if text_num <=50:
-                    continue
-            except:
-                continue
-
-            #           댓글 수
-            comment_num = self.getComment(soup)
-
-            #         이미지 수
-            image_list = soup.select(".se-module.se-module-image")
-            sticker_list = soup.select(".se-module.se-module-sticker")
-            image_num = len(image_list)
-            sticker_num = len(sticker_list)
-
-            gif_num =0
-            for image in image_list:
-                img_tag = image.select_one('a > img')
-                if img_tag:
-                    img_url = img_tag['src']
-                    if re.findall(".GIF.",img_url):
-                        gif_num+=1
-            image_num-=gif_num
-            #          비디오 수
-            video_list = soup.select(".se-component.se-video")
-            video_num = len(video_list)
-
-            #           아이디
-            nick_name = re.search("blogId=(.+)&logNo",I_post_link).group(1)
-            post_detail = re.search("logNo=(.+)&redirect",I_post_link).group(1)
+        manager = multiprocessing.Manager()
+        li = manager.list()
+        
+        pool = multiprocessing.Pool(processes=4)
+        pool.map(self.getPostDataFrame_blogUrls_,[(li,i)for i in self.blog_url_list])
+        pool.close()
+        pool.join()
+        
+        self.post_df = pd.DataFrame(list(li),columns=["Post URL","Post","Image num","sticker num","gif num",
+                                                      "Paragraph num","Comment num","Video num",'Comment detail'])
+        
+        return self.post_df
+    
+    def getPostDataFrame_blogUrls_(self,param):
+        # post_df_idx=0
+        # post_num = len(self.blog_url_list)
+        # cur_post = 1
+        # for post_link in self.blog_url_list:
+        #     print(f"\r{cur_post}/{post_num}",end='')
+        #     cur_post = cur_post + 1
+        
+        shared = param[0]
+        post_link = param[1]
+        
+        try:
+            soup,I_post_link = self.getInnerIFrameSoup(post_link)
+            overlays = ".se-component.se-text.se-l-default"
+            contents = soup.select(overlays)
+            main_text = "".join([content.text for content in contents])
+            main_text = main_text.replace("\n","").replace("\t","")
+            text_num = len(main_text.split(" "))
+            if text_num <=50:
+                return
+                # continue
+        except:
+            return
+            # continue
             
-            #           댓글 내용
-            if int(comment_num) > 0:
-                comment_detail = self.getCommentDetail(nick_name,post_detail)     
-            else:
-                comment_detail=0
+        #           댓글 수
+        comment_num = self.getComment(soup)
 
-            #          공감 수
-            symp_num = self.getSympnum(nick_name,I_post_link)
+        #         이미지 수
+        image_list = soup.select(".se-module.se-module-image")
+        sticker_list = soup.select(".se-module.se-module-sticker")
+        image_num = len(image_list)
+        sticker_num = len(sticker_list)
 
-            #            블로그 일일 평균 방문자 수
-            viewer_num_url = f'https://blog.naver.com/NVisitorgp4Ajax.nhn?blogId={nick_name}'
-            viewer_num_response = requests.get(viewer_num_url)
-            viewer_num_list = [int(node.get("cnt")) for node in ET.fromstring(viewer_num_response.text)]
-            viewer_mean = np.mean(np.array(viewer_num_list))
+        gif_num =0
+        for image in image_list:
+            img_tag = image.select_one('a > img')
+            if img_tag:
+                img_url = img_tag['src']
+                if re.findall(".GIF.",img_url):
+                    gif_num+=1
+        image_num-=gif_num
+        #          비디오 수
+        video_list = soup.select(".se-component.se-video")
+        video_num = len(video_list)
 
-            # 이웃 수
-            try:
-                buddy_num,total_visit,blogger_category = self.getBDTVBC(nick_name)
-            except:
-                buddy_num,total_visit,blogger_category = ('error','error','error')
-            #광고 판단 기준
-            ad=''
-            #이미지와 스티커를 기준으로 광고 여부 판단
-            for sel_list in [image_list,sticker_list]:
-                if sel_list:
-                    try:
-                        sel_list[-2] = sel_list[-2]
-                    except:
-                        sel_list.append(sel_list[0])
+        #           아이디
+        nick_name = re.search("blogId=(.+)&logNo",I_post_link).group(1)
+        post_detail = re.search("logNo=(.+)&redirect",I_post_link).group(1)
+        ##########################################################################################################################################
+        #           댓글 내용
+        if int(comment_num) > 0:
+            comment_detail = self.getCommentDetail(nick_name,post_detail)     
+        else:
+            comment_detail=0
+        ##########################################################################################################################################
+        
+        #          공감 수
+        # symp_num = self.getSympnum(nick_name,I_post_link)
 
-                    for image in [sel_list[-1],sel_list[0],sel_list[-2]]:
-                        img_tag = image.select_one('a > img')
-                        # 이미지가 있을 경우
-                        if img_tag:
-                            #이미지의 link 저장
-                            img_url = img_tag['src']
-                            #레뷰 이미지가 포함되어 있으면 revu로 분류
-                            if re.findall("www.revu.net",img_url):
-                                ad = 'revu'
-                                break
-                            if re.findall("www.99das.com",img_url):
-                                ad='99das'
-                                break
-                            if re.findall("storyn",img_url):
-                                ad = 'storyn'
-                                break
+        #            블로그 일일 평균 방문자 수
+        # viewer_num_url = f'https://blog.naver.com/NVisitorgp4Ajax.nhn?blogId={nick_name}'
+        # viewer_num_response = requests.get(viewer_num_url)
+        # viewer_num_list = [int(node.get("cnt")) for node in ET.fromstring(viewer_num_response.text)]
+        # viewer_mean = np.mean(np.array(viewer_num_list))
+
+        # 이웃 수
+        # try:
+        #     buddy_num,total_visit,blogger_category = self.getBDTVBC(nick_name)
+        # except:
+        #     buddy_num,total_visit,blogger_category = ('error','error','error')
+        
+        
+        #광고 판단 기준
+        #이미지와 스티커를 기준으로 광고 여부 판단
+        # for sel_list in [image_list,sticker_list]:
+        #     if sel_list:
+        #         try:
+        #             sel_list[-2] = sel_list[-2]
+        #         except:
+        #             sel_list.append(sel_list[0])
+
+        #         for image in [sel_list[-1],sel_list[0],sel_list[-2]]:
+        #             img_tag = image.select_one('a > img')
+        #             # 이미지가 있을 경우
+        #             if img_tag:
+        #                 #이미지의 link 저장
+        #                 img_url = img_tag['src']
+        #                 #레뷰 이미지가 포함되어 있으면 revu로 분류
+        #                 if re.findall("www.revu.net",img_url):
+        #                     ad = 'revu'
+        #                     break
+        #                 if re.findall("www.99das.com",img_url):
+        #                     ad='99das'
+        #                     break
+        #                 if re.findall("storyn",img_url):
+        #                     ad = 'storyn'
+        #                     break
+                        
+        #                 #OCR 이용해 이미지내 텍스트 추출후 미리 선정한 키워드와 대조 비교
+        #                 try:
+        #                     ad_img_response = requests.get(img_url)
+        #                     img = Image.open(io.BytesIO(ad_img_response.content))
+        #                     ad_text = pytesseract.image_to_string(img,lang='kor')
+        #                     ad_text.replace("\n"," ")
+        #                     ad_text.replace("\t"," ")
+        #                     main_text += ad_text
+        #                 except:
+        #                     break
+        #                 #광고성 단어 포함시 img_ad 
+        #                 for keyword in self.keyword_list:
+        #                     if keyword in ad_text:
+        #                         ad ='img_ad'
+        #                         break
+        #                 for keyword in self.notad_keyword_list:
+        #                     if keyword in ad_text:
+        #                         ad=''
+        #                         break
+                                    
+        #                 #그 외에 광고일 가능성이 높은 image 마지막 이미지의 가로 세로 비율이 3:1일 경우 suspect로분류
+        #                 try:
+        #                     img_width = img_tag['data-width']
+        #                     img_height = img_tag['data-height']
                             
-                            #OCR 이용해 이미지내 텍스트 추출후 미리 선정한 키워드와 대조 비교
-                            try:
-                                ad_img_response = requests.get(img_url)
-                                img = Image.open(io.BytesIO(ad_img_response.content))
-                                ad_text = pytesseract.image_to_string(img,lang='kor')
-                                ad_text.replace("\n"," ")
-                                ad_text.replace("\t"," ")
-                                main_text += ad_text
-                            except:
-                                break
-                            #광고성 단어 포함시 img_ad 
-                            for keyword in self.keyword_list:
-                                if keyword in ad_text:
-                                    ad ='img_ad'
-                                    break
-                            for keyword in self.notad_keyword_list:
-                                if keyword in ad_text:
-                                    ad=''
-                                    break
+        #                     if float(img_width)/float(img_height) > 3.0:
+        #                         ad='suspect'
+        #                 except:
+        #                     pass
+        # #텍스트를 기준으로 광고 여부 판단    
+        # title_text=main_text
+        
+        # for keyword in self.keyword_list:
+        #     if keyword in title_text:
+        #         ad='text_ad'
+        #         break
+        # for keyword in self.notad_keyword_list:
+        #     if keyword in title_text:
+        #         ad=''
+        #         break
+                
+    
+        #블로그 작성 날짜
+        # posting_date_tag = soup.select_one(".se_publishDate")
+        # if posting_date_tag:
+        #     posting_date = posting_date_tag.text
+        # else:
+        #     posting_date = ''
+        
+        shared.append([post_link,main_text,image_num,sticker_num,gif_num,
+                       text_num,comment_num,video_num,comment_detail])
+        # dfnew = pd.DataFrame([(post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category,comment_detail)],columns=("Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
+        # self.post_df = self.post_df.append(dfnew,ignore_index=True)
+            # post_df_idx+=1
+            #print("-"*50)
+        # return self.post_df
+    # def savePostDf(self,posts):
+    #     post_df_idx=0
+    #     post_num = len(posts)
+        
+    #     cur_post = 1
+    #     for post in posts:
+    #         #print(post_df_idx)
+    #         # 크롤링이 얼마나 진행되었는지 show
+    #         print(f"\r{cur_post}/{post_num}",end='')
+    #         cur_post = cur_post + 1
+
+    #         #           포스트 제목
+    #         post_title=post.find("a",attrs={"class":"api_txt_lines total_tit"}).get_text()
+    #         #print("title :",post_title)
+
+    #         #            포스트 블로거
+    #         post_writer = post.find("a",attrs={"class":"sub_txt sub_name"}).get_text()
+    #         #print("writer :",post_writer)
+
+    #         #             포스트 링크
+    #         post_link = post.find("a",attrs={"class":"api_txt_lines total_tit"})['href']
+    #         #print("link :",post_link)
+
+    #         #              포스트 본문
+    #         try:
+    #             soup,I_post_link = self.getInnerIFrameSoup(post_link)
+    #             overlays = ".se-component.se-text.se-l-default"
+    #             contents = soup.select(overlays)
+    #             main_text = "".join([content.text for content in contents])
+    #             main_text = main_text.replace("\n","").replace("\t","")
+    #             text_num = len(main_text.split(" "))
+    #             if text_num <=50:
+    #                 continue
+    #         except:
+    #             continue
+
+    #         #           댓글 수
+    #         comment_num = self.getComment(soup)
+
+    #         #         이미지 수
+    #         image_list = soup.select(".se-module.se-module-image")
+    #         sticker_list = soup.select(".se-module.se-module-sticker")
+    #         image_num = len(image_list)
+    #         sticker_num = len(sticker_list)
+
+    #         gif_num =0
+    #         for image in image_list:
+    #             img_tag = image.select_one('a > img')
+    #             if img_tag:
+    #                 img_url = img_tag['src']
+    #                 if re.findall(".GIF.",img_url):
+    #                     gif_num+=1
+    #         image_num-=gif_num
+    #         #          비디오 수
+    #         video_list = soup.select(".se-component.se-video")
+    #         video_num = len(video_list)
+
+    #         #           아이디
+    #         nick_name = re.search("blogId=(.+)&logNo",I_post_link).group(1)
+    #         post_detail = re.search("logNo=(.+)&redirect",I_post_link).group(1)
+
+    #         #           댓글 내용
+    #         if int(comment_num) > 0:
+    #             comment_detail = self.getCommentDetail(nick_name,post_detail)
+    #         else:
+    #             comment_detail=0
+    #         print(comment_detail)
+    #         #          공감 수
+    #         symp_num = self.getSympnum(nick_name,I_post_link)
+
+    #         # 이웃 수
+    #         try:
+    #             buddy_num,total_visit,blogger_category = self.getBDTVBC(nick_name)
+    #         except:
+    #             buddy_num,total_visit,blogger_category = ('error','error','error')
+    #         #            블로그 일일 평균 방문자 수
+    #         viewer_num_url = f'https://blog.naver.com/NVisitorgp4Ajax.nhn?blogId={nick_name}'
+    #         viewer_num_response = requests.get(viewer_num_url)
+    #         viewer_num_list = [int(node.get("cnt")) for node in ET.fromstring(viewer_num_response.text)]
+    #         viewer_mean = np.mean(np.array(viewer_num_list))
+
+    #         #광고 판단 기준
+    #         ad=''
+    #         #이미지와 스티커를 기준으로 광고 여부 판단
+    #         for sel_list in [image_list,sticker_list]:
+    #             if sel_list:
+    #                 try:
+    #                     sel_list[-2] = sel_list[-2]
+    #                 except:
+    #                     sel_list.append(sel_list[0])
+
+    #                 for image in [sel_list[-1],sel_list[0],sel_list[-2]]:
+    #                     img_tag = image.select_one('a > img')
+    #                     # 이미지가 있을 경우
+    #                     if img_tag:
+    #                         #이미지의 link 저장
+    #                         img_url = img_tag['src']
+    #                         #레뷰 이미지가 포함되어 있으면 revu로 분류
+    #                         if re.findall("www.revu.net",img_url):
+    #                             ad = 'revu'
+    #                             break
+    #                         if re.findall("www.99das.com",img_url):
+    #                             ad='99das'
+    #                             break
+    #                         if re.findall("storyn",img_url):
+    #                             ad = 'storyn'
+    #                             break
+                            
+    #                         #OCR 이용해 이미지내 텍스트 추출후 미리 선정한 키워드와 대조 비교
+    #                         ad_text=''
+    #                         try:
+    #                             ad_img_response = requests.get(img_url)
+    #                             img = Image.open(io.BytesIO(ad_img_response.content))
+    #                             ad_text = pytesseract.image_to_string(img,lang='kor')
+    #                             ad_text.replace("\n"," ")
+    #                             ad_text.replace("\t"," ")
+    #                             main_text += ad_text
+    #                         except:
+    #                             pass
+    #                         #광고성 단어 포함시 img_ad 
+    #                         for keyword in self.keyword_list:
+    #                             if keyword in ad_text:
+    #                                 ad ='img_ad'
+    #                                 break
+    #                         for keyword in self.notad_keyword_list:
+    #                             if keyword in ad_text:
+    #                                 ad=''
+    #                                 break
                                         
-                            #그 외에 광고일 가능성이 높은 image 마지막 이미지의 가로 세로 비율이 3:1일 경우 suspect로분류
-                            try:
-                                img_width = img_tag['data-width']
-                                img_height = img_tag['data-height']
+    #                         #그 외에 광고일 가능성이 높은 image 마지막 이미지의 가로 세로 비율이 3:1일 경우 suspect로분류
+    #                         try:
+    #                             img_width = img_tag['data-width']
+    #                             img_height = img_tag['data-height']
                                 
-                                if float(img_width)/float(img_height) > 3.0:
-                                    ad='suspect'
-                            except:
-                                pass
-            #텍스트를 기준으로 광고 여부 판단    
-            title_text=main_text
+    #                             if float(img_width)/float(img_height) > 3.0:
+    #                                 ad='suspect'
+    #                         except:
+    #                             pass
+    #         #텍스트를 기준으로 광고 여부 판단    
+    #         title_text=main_text+post_title
             
-            for keyword in self.keyword_list:
-                if keyword in title_text:
-                    ad='text_ad'
-                    break
-            for keyword in self.notad_keyword_list:
-                if keyword in title_text:
-                    ad=''
-                    break
+    #         for keyword in self.keyword_list:
+    #             if keyword in title_text:
+    #                 ad='text_ad'
+    #                 break
+    #         for keyword in self.notad_keyword_list:
+    #             if keyword in title_text:
+    #                 ad=''
+    #                 break
                     
         
-            #블로그 작성 날짜
-            posting_date_tag = soup.select_one(".se_publishDate")
-            if posting_date_tag:
-                posting_date = posting_date_tag.text
-            else:
-                posting_date = ''
+    #         #블로그 작성 날짜
+    #         # posting_date_tag = soup.select_one(".se_publishDate")
+    #         # if posting_date_tag:
+    #         #     posting_date = posting_date_tag.text
+    #         # else:
+    #         #     posting_date = ''
+    #         posting_date = ''
             
-            
-            self.post_df.loc[post_df_idx] = [post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category,comment_detail]
-            post_df_idx+=1
-            #print("-"*50)
-        return self.post_df
-    def savePostDf(self,posts):
-        post_df_idx=0
-        post_num = len(posts)
-        
-        cur_post = 1
-        for post in posts:
-            #print(post_df_idx)
-            # 크롤링이 얼마나 진행되었는지 show
-            print(f"\r{cur_post}/{post_num}",end='')
-            cur_post = cur_post + 1
+    #         self.post_df.loc[post_df_idx] = [post_title,post_writer,post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category,comment_detail]
+    #         post_df_idx+=1
+    #         #print("-"*50)
 
-            #           포스트 제목
-            post_title=post.find("a",attrs={"class":"api_txt_lines total_tit"}).get_text()
-            #print("title :",post_title)
-
-            #            포스트 블로거
-            post_writer = post.find("a",attrs={"class":"sub_txt sub_name"}).get_text()
-            #print("writer :",post_writer)
-
-            #             포스트 링크
-            post_link = post.find("a",attrs={"class":"api_txt_lines total_tit"})['href']
-            #print("link :",post_link)
-
-            #              포스트 본문
-            try:
-                soup,I_post_link = self.getInnerIFrameSoup(post_link)
-                overlays = ".se-component.se-text.se-l-default"
-                contents = soup.select(overlays)
-                main_text = "".join([content.text for content in contents])
-                main_text = main_text.replace("\n","").replace("\t","")
-                text_num = len(main_text.split(" "))
-                if text_num <=50:
-                    continue
-            except:
-                continue
-
-            #           댓글 수
-            comment_num = self.getComment(soup)
-
-            #         이미지 수
-            image_list = soup.select(".se-module.se-module-image")
-            sticker_list = soup.select(".se-module.se-module-sticker")
-            image_num = len(image_list)
-            sticker_num = len(sticker_list)
-
-            gif_num =0
-            for image in image_list:
-                img_tag = image.select_one('a > img')
-                if img_tag:
-                    img_url = img_tag['src']
-                    if re.findall(".GIF.",img_url):
-                        gif_num+=1
-            image_num-=gif_num
-            #          비디오 수
-            video_list = soup.select(".se-component.se-video")
-            video_num = len(video_list)
-
-            #           아이디
-            nick_name = re.search("blogId=(.+)&logNo",I_post_link).group(1)
-            post_detail = re.search("logNo=(.+)&redirect",I_post_link).group(1)
-
-            #           댓글 내용
-            if int(comment_num) > 0:
-                comment_detail = self.getCommentDetail(nick_name,post_detail)
-            else:
-                comment_detail=0
-            print(comment_detail)
-            #          공감 수
-            symp_num = self.getSympnum(nick_name,I_post_link)
-
-            # 이웃 수
-            try:
-                buddy_num,total_visit,blogger_category = self.getBDTVBC(nick_name)
-            except:
-                buddy_num,total_visit,blogger_category = ('error','error','error')
-            #            블로그 일일 평균 방문자 수
-            viewer_num_url = f'https://blog.naver.com/NVisitorgp4Ajax.nhn?blogId={nick_name}'
-            viewer_num_response = requests.get(viewer_num_url)
-            viewer_num_list = [int(node.get("cnt")) for node in ET.fromstring(viewer_num_response.text)]
-            viewer_mean = np.mean(np.array(viewer_num_list))
-
-            #광고 판단 기준
-            ad=''
-            #이미지와 스티커를 기준으로 광고 여부 판단
-            for sel_list in [image_list,sticker_list]:
-                if sel_list:
-                    try:
-                        sel_list[-2] = sel_list[-2]
-                    except:
-                        sel_list.append(sel_list[0])
-
-                    for image in [sel_list[-1],sel_list[0],sel_list[-2]]:
-                        img_tag = image.select_one('a > img')
-                        # 이미지가 있을 경우
-                        if img_tag:
-                            #이미지의 link 저장
-                            img_url = img_tag['src']
-                            #레뷰 이미지가 포함되어 있으면 revu로 분류
-                            if re.findall("www.revu.net",img_url):
-                                ad = 'revu'
-                                break
-                            if re.findall("www.99das.com",img_url):
-                                ad='99das'
-                                break
-                            if re.findall("storyn",img_url):
-                                ad = 'storyn'
-                                break
-                            
-                            #OCR 이용해 이미지내 텍스트 추출후 미리 선정한 키워드와 대조 비교
-                            ad_text=''
-                            try:
-                                ad_img_response = requests.get(img_url)
-                                img = Image.open(io.BytesIO(ad_img_response.content))
-                                ad_text = pytesseract.image_to_string(img,lang='kor')
-                                ad_text.replace("\n"," ")
-                                ad_text.replace("\t"," ")
-                                main_text += ad_text
-                            except:
-                                pass
-                            #광고성 단어 포함시 img_ad 
-                            for keyword in self.keyword_list:
-                                if keyword in ad_text:
-                                    ad ='img_ad'
-                                    break
-                            for keyword in self.notad_keyword_list:
-                                if keyword in ad_text:
-                                    ad=''
-                                    break
-                                        
-                            #그 외에 광고일 가능성이 높은 image 마지막 이미지의 가로 세로 비율이 3:1일 경우 suspect로분류
-                            try:
-                                img_width = img_tag['data-width']
-                                img_height = img_tag['data-height']
-                                
-                                if float(img_width)/float(img_height) > 3.0:
-                                    ad='suspect'
-                            except:
-                                pass
-            #텍스트를 기준으로 광고 여부 판단    
-            title_text=main_text+post_title
-            
-            for keyword in self.keyword_list:
-                if keyword in title_text:
-                    ad='text_ad'
-                    break
-            for keyword in self.notad_keyword_list:
-                if keyword in title_text:
-                    ad=''
-                    break
-                    
-        
-            #블로그 작성 날짜
-            posting_date_tag = soup.select_one(".se_publishDate")
-            if posting_date_tag:
-                posting_date = posting_date_tag.text
-            else:
-                posting_date = ''
-            
-            
-            self.post_df.loc[post_df_idx] = [post_title,post_writer,post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category,comment_detail]
-            post_df_idx+=1
-            #print("-"*50)
-
-    def getPostDataFrame_FromItemName(self):
-        posts = self.getPostsByItem()
-        self.savePostDf(posts)
-        return self.post_df
+    # def getPostDataFrame_FromItemName(self):
+    #     posts = self.getPostsByItem()
+    #     self.savePostDf(posts)
+    #     return self.post_df
 
 def run():  
     start = time.time()
@@ -533,10 +561,54 @@ def run():
         pd.set_option('display.max_columns',None)
         post_df
     else:
+        start_time = time.time()
         crawler = NaverBlogCrawler()
-        temp = ['https://blog.naver.com/ese2698?Redirect=Log&logNo=222222309546', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222215476747', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222389737785', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222162573731', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222171243977', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222147097494']
+        temp = ['https://blog.naver.com/ese2698?Redirect=Log&logNo=222222309546', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222215476747', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222389737785', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222162573731', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222171243977', 'https://blog.naver.com/ese2698?Redirect=Log&logNo=222147097494',
+                'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221261294401'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221007908654'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=220705882532'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221040269691'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=222229348408'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221573038297'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221550665485'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221526404647'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221437129567'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221397404568'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221342819402'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221232933227'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221216084317'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221215473439'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221203378953'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221165994181'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221145629063'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221108203728'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221695279093'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221650181542'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221618501335'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221583137280'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221533492394'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221394426520'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221369057834'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221323010963'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221315730286'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221275549182'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221251652010'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221207554505'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221195425106'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221193963451'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221186765151'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221163292848'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221139667091'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221127708945'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221124117661'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221123219686'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221101716267'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221100085009'
+# ,'https://blog.naver.com/mkhiya1?Redirect=Log&logNo=221042581350'
+]
         crawler = NaverBlogCrawler(_blog_url_list = temp)
         df = crawler.getPostDataFrame_blogUrls()
         print(df['Comment detail'])
+        print("--- %s seconds ---" % (time.time() - start_time))
 if __name__ == '__main__':
     run()

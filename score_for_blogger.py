@@ -148,46 +148,47 @@ def score_blogger(itemname,data):
             score += 10
 
         post_df_idx+=1
-        if not isNaN(data['AD'][num_]) and ad ==1:
-            ad = 0
+        # if not isNaN(data['AD'][num_]) and ad ==1:
+        #     ad = 0
         
-        final_list.append([text,score,data['Image num'][num_],data['Video num'][num_],data['Comment num'][num_],data['Sympathy num'][num_],data['weekly viewer mean'][num_],ad,keyword_score,temp_score,josa,noun_,temp,int(data['Paragraph num'][num_]),data['gif num'][num_],data['sticker num'][num_],imgwrd_score])
-
-    temp_df = pd.DataFrame(columns=('Post','score','Image num','Video num','comment num','sympathy num','weekly view','AD','keyword score','tfidf score','josa','noun','noun/josa','paragraph num','gif num','sticker num'))
+        final_list.append([text,score,data['Image num'][num_],data['Video num'][num_],data['Comment num'][num_],
+                           keyword_score,temp_score,
+                           temp,int(data['Paragraph num'][num_]),data['gif num'][num_],
+                           data['sticker num'][num_],imgwrd_score])
 
     final_score=0
     for i in range(len(final_list)):
         #keyword score
-        final_list[i][1]+=((final_list[i][8]-threshold_list[0][1])/threshold_list[0][0])*5
+        final_list[i][1]+=((final_list[i][5]-threshold_list[0][1])/threshold_list[0][0])*8
         #tfidf score
-        final_list[i][1]+=((final_list[i][9]-threshold_list[1][1])/threshold_list[1][0])*15
+        final_list[i][1]+=((final_list[i][6]-threshold_list[1][1])/threshold_list[1][0])*8
         #greammer score
-        if final_list[i][-2]<1.96 and final_list[i][-2]>0:
+        if final_list[i][7]<1.96 and final_list[i][7]>0:
             final_list[i][1] += 5
         #paragraph num score
-        final_list[i][1]+=(1-((final_list[i][-1]-threshold_list[2][1])/threshold_list[2][0]))*10
+        final_list[i][1]+=((final_list[i][8]-threshold_list[2][1])/threshold_list[2][0])*18
         #image num score
-        final_list[i][1]+=((final_list[i][2]-threshold_list[3][1])/threshold_list[3][0])*10
+        final_list[i][1]+=((final_list[i][2]-threshold_list[3][1])/threshold_list[3][0])*25
         #imgwrd num score
         if final_list[i][-1]>-1.96 and final_list[i][-1]<0:
-            final_list[i][1] += 10
-        if final_list[i][-1]>=0 and final_list[i][-1]<0.5:
             final_list[i][1] += 7
-        if final_list[i][-1]>=0.5 or final_list[i][-1]<=-1.96:
+        if final_list[i][-1]>=0 and final_list[i][-1]<0.5:
             final_list[i][1] += 5
+        if final_list[i][-1]>=0.5 or final_list[i][-1]<=-1.96:
+            final_list[i][1] += 3
         #video num score
-        final_list[i][1]-=((final_list[i][3]-threshold_list[4][1])/threshold_list[4][0])*10
+        final_list[i][1]-=((final_list[i][3]-threshold_list[4][1])/threshold_list[4][0])*5
         #gif num score
-        final_list[i][1]+=((final_list[i][-3]-threshold_list[5][1])/threshold_list[5][0])*20
+        final_list[i][1]+=((final_list[i][-3]-threshold_list[5][1])/threshold_list[5][0])*13
         #sticker num score
-        final_list[i][1]+=((final_list[i][-2]-threshold_list[6][1])/threshold_list[6][0])*15
+        final_list[i][1]+=((final_list[i][-2]-threshold_list[6][1])/threshold_list[6][0])*10
         
         final_score += final_list[i][1]
     if len(final_list)!=0:
         final_score/=len(final_list)
     if final_score>=100:
         final_score = 95
-    return ad, final_score
+    return final_score
 
 
 

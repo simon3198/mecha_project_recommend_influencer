@@ -30,14 +30,14 @@ def blog_crawler(blogid):
                 break
             date = date[:4]
             try:
-                if int(date)<2016:
+                if int(date)<2019:
                     flg=1
                     break
             except:
                 pass
             
             try:
-                if int(date)==2020 and post_num==0:
+                if int(date)==2021 and post_num==0:
                     post_num = page_num*30
             except:
                 pass
