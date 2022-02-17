@@ -14,7 +14,6 @@ import re
 # -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
-import ast
 from blogger_crawler import blog_crawler
 from Naver_Blog_Crawler import NaverBlogCrawler
 from score_for_blogger import score_blogger
@@ -24,7 +23,7 @@ import xml.etree.ElementTree as ET
 import sys
 
 if __name__ == '__main__':
-    from sympy import det
+    
     id_list=[]
 
     link= input('revu link를 입력해주세요 : ')
@@ -102,15 +101,18 @@ if __name__ == '__main__':
         print('오류가 발생하였습니다. 다시 시도해주세요')
         sys.exit()
     
-    # id_list = pd.DataFrame(id_list)
-    # id_list.to_csv('./datas/revu_id_list.csv')
+    id_list = pd.DataFrame(id_list)
+    id_list.to_csv('./datas/revu_id_list.csv')
 
     #DIY,컴퓨터부품, 커넥터 제거 52-3=49
-    item_list = ['보석십자수', '미니어처', '펀치 니들', '3d펜', '3d프린터', '가죽공예', '가방 만들기', '양모펠트', '프랑스 자수', '스크래치 북','LED조명', '무드등', '칼림바', '오르골', '발난로', '우산', '캡슐 세제','전자저울', '산소포화도 측정기', '소음 측정기', '거리 측정기', '온습도계', '적외선 온도계', '높이 측정기', '타이머', '유수분 측정기','아두이노', '라즈베리 파이', '마이크로 비트','휴대용선풍기','스피커','디퓨저','기저귀','파우치','운동화','청소세제','로봇청소기','전동칫솔','수납박스','청소포','에어프라이어','거북목베개','컵홀더','공기청정기','진공청소기','자외선차단제','섬유유연제','가습기','마우스패드']
+    item_list = ['보석십자수', '미니어처', '펀치 니들', '3d펜', '3d프린터', '가죽공예', '가방 만들기', '양모펠트', '프랑스 자수', '스크래치 북','LED조명', '무드등', '칼림바', 
+                 '오르골', '발난로', '우산', '캡슐 세제','전자저울', '산소포화도 측정기', '소음 측정기', '거리 측정기', '온습도계', '적외선 온도계', '높이 측정기', '타이머', 
+                 '유수분 측정기','아두이노', '라즈베리 파이', '마이크로 비트','휴대용선풍기','스피커','디퓨저','기저귀','파우치','운동화','청소세제','로봇청소기',
+                 '전동칫솔','수납박스','청소포','에어프라이어','거북목베개','컵홀더','공기청정기','진공청소기','자외선차단제','섬유유연제','가습기','마우스패드']
 
     # blogger_list = pd.read_csv('./revu_id_list.csv')
     # blogger_list = blogger_list['0'].tolist()
-
+    
     blogger_list=id_list
     
     final_score_list=[]
@@ -124,7 +126,6 @@ if __name__ == '__main__':
             is_notad = 2
             post_num, data = blog_crawler(blogger_name)
 
-            final_dic={}
             category = []
             if data['Link'].count() <= 100:
                 continue
@@ -134,7 +135,6 @@ if __name__ == '__main__':
                 item_bool = data['Title'].apply(lambda x: item in x)
                 item_df = data[item_bool]
                 link_list.extend(list(item_df['Link']))
-                final_dic[item] = list(item_df['Link'])
             final_df =  pd.DataFrame(link_list,columns=['Link'])
             
             score_list=[]
@@ -146,8 +146,8 @@ if __name__ == '__main__':
             df = pd.merge(df,data,on='Post URL')
             df['Comment num'] = pd.to_numeric(df['Comment num'])
             for item in item_list:
-                item = item.replace(' ','')
-                item_bool = df['Title'].apply(lambda x: item in x)
+                temp = item.replace(' ','')
+                item_bool = df['Title'].apply(lambda x: temp in x)
                 item_df = df[item_bool]
                 
                 if len(item_df)>0:
