@@ -555,11 +555,10 @@ def run():
 
         item_name=item_name.replace("\"","")
         item_name=item_name.replace("+","")
-        post_df.to_csv('./crawler/csvfile/'+item_name+date.today().isoformat()+'.csv')
+        # post_df.to_csv('./crawler/csvfile/'+item_name+date.today().isoformat()+'.csv')
 
         pd.set_option('display.max_rows',None)
         pd.set_option('display.max_columns',None)
-        post_df
     else:
         start_time = time.time()
         crawler = NaverBlogCrawler()

@@ -9,7 +9,7 @@ influencer_item_df = influencer_item_df.append(training_item_df)
 influencer_item_df.drop_duplicates(['blog id'],inplace=True)
 save_df = influencer_item_df
 
-itemcharacter_df = pd.read_csv('./item_source.csv')
+itemcharacter_df = pd.read_csv('./datas/item_source.csv')
 itemcharacter_df = itemcharacter_df.rename(columns={'Unnamed: 0':'character'})
 itemcharacter_df = itemcharacter_df.set_index('character').T
 itemcharacter_df.fillna(0,inplace=True)
@@ -189,7 +189,7 @@ df=df[['weekly view', '2021 post num', '5years post num',
        '컵홀더', '공기청정기', '진공청소기', '자외선차단제', '섬유유연제', '가습기', '마우스패드'
        ]]
 
-filtered = pd.read_csv('filtered blogger.csv')
+filtered = pd.read_csv('./datas/filtered blogger.csv')
 
 new_df = pd.DataFrame(columns=['weekly view', '2021 post num', '5years post num',
        '보석십자수', '미니어처', '펀치니들', '3d펜', '3d프린터', '가죽공예', '가방만들기', '양모펠트',
@@ -203,4 +203,4 @@ new_df = pd.DataFrame(columns=['weekly view', '2021 post num', '5years post num'
 for blog_id in filtered['0']:
     new_df = new_df.append(df.loc[blog_id])
 
-new_df.to_csv('./recommender_final.csv')
+new_df.to_csv('./datas/recommender_final.csv')
