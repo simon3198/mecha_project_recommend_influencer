@@ -96,21 +96,21 @@ output.to_csv('./datas/content_filled_final.csv')
 df = output
 df = df.replace(0, np.NaN)
 
-moviedata=pd.DataFrame(data=df.T)
-moviedata_dic=moviedata.to_dict()
+inf_data=pd.DataFrame(data=df.T)
+inf_data_dic=inf_data.to_dict()
 
 # dictionary에 nan값 함수 
-def dropna(data): # name : i , movie : j 
+def dropna(data):
     for i in data:
         for j in data[i]:
             name=i
-            movie=j
+            item_data=j
             value=data[i][j]
-        data[i]={movie: value for movie, value in data[i].items() if pd.isnull(value)==False}
+        data[i]={item_data: value for item_data, value in data[i].items() if pd.isnull(value)==False}
     return data
 
 # 딕셔너리 nan 값 제거 
-moviedata_dic_drop=dropna(moviedata_dic)
+inf_data_dic_drop=dropna(inf_data_dic)
 
 import math
 def sim_pearson(data, n1, n2): 
@@ -120,7 +120,7 @@ def sim_pearson(data, n1, n2):
     sumSqX=0 # x 제곱합 
     sumSqY=0 # y 제곱합 
     sumXY=0 #XY 합
-    global cnt # 영화 갯수
+    global cnt
     cnt =0
     for i in data[n1]:
         if i in data[n2]:
@@ -139,7 +139,7 @@ def sim_pearson(data, n1, n2):
 def top_match(data, name, rank=3, simf=sim_pearson):
     #sim_pearson함수를 simf라는 이름으로 사용하겠다.    
     #구현부분 
-    simList=[] #유사한 영화들이 저장될 리스트
+    simList=[]
     for i in data:
         if name!=i: #자기 자신을 제외
             simList.append((simf(data, name, i),i))
@@ -152,29 +152,28 @@ def recommendation(data,person,simf=sim_pearson ):
         res=top_match(data, person, len(data))
     #     print(res)
         simSum=0 #상관계수(유사도)의 합
-        score_dic={} #예상평점 총합을 저장하기 위한 dic
+        score_dic={} 
         sim_dic={} # 유사도 합을 저장하기 위한 dic 
         myList=[]
         for sim, name in res: 
             if sim<0 : continue # 유사도가 양수인 경우만 처리를 하도록 하겠음 
-            for movie in data[name]:
-                if movie not in data[person]:
-    # name이 본 movie를 person이 보지 않았다면... => 추천해야하는 영화 대상이 됌
-                    simSum+=sim*data[name][movie]
-                    score_dic.setdefault(movie,0) #key가 없으면 초기화하지만 key가 있으면 냅둔다.
-                    score_dic[movie]+=simSum
-                    sim_dic.setdefault(movie,0)
-                    sim_dic[movie]+=sim
-                simSum=0 # 영화변경 -> 0으로 초기화 
-        for key in score_dic: #기준이 안본 영화의 제목들이 들어감 
-            score_dic[key]=score_dic[key]/sim_dic[key] # 평점총합 / 유사도 총합
+            for item_data in data[name]:
+                if item_data not in data[person]:
+                    simSum+=sim*data[name][item_data]
+                    score_dic.setdefault(item_data,0) #key가 없으면 초기화하지만 key가 있으면 냅둔다.
+                    score_dic[item_data]+=simSum
+                    sim_dic.setdefault(item_data,0)
+                    sim_dic[item_data]+=sim
+                simSum=0 
+        for key in score_dic: 
+            score_dic[key]=score_dic[key]/sim_dic[key] 
             df[key][person]=score_dic[key]
     except:
         pass
 
 i=0
 for person in df.index:
-    recommendation(moviedata_dic_drop,person)
+    recommendation(inf_data_dic_drop,person)
 
 df['weekly view']= list(save_df['weeklyview'])
 df['2021 post num']= list(save_df['2021postnum'])
