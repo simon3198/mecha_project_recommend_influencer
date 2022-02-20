@@ -205,14 +205,15 @@ new_df = pd.DataFrame(columns=['weekly view', '2021 post num', '5years post num'
 for blog_id in filtered['0']:
     new_df = new_df.append(df.loc[blog_id])
 
-new_df.to_csv('./datas/recommender_final.csv')
-
 choice = choice.replace(' ','')
-new_df = new_df[['weekly view', '2021 post num', '5years post num',choice]]
 
 over_1000 = new_df['weekly view'] >=1000
 
 new_df=new_df[over_1000]
+
+new_df.to_csv('./datas/recommender_final.csv')
+
+new_df = new_df[['weekly view', '2021 post num', '5years post num',choice]]
 
 new_df.sort_values(by=choice,inplace=True,ascending=False)
 # new_df.reset_index(inplace=True)

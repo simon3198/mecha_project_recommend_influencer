@@ -7,8 +7,8 @@ $(document).ready(function() {
      });
      $(document).on("click",'.btn-outline-secondary',function () {
        console.log(this.id)
-       var win = window.open("","popup","width=1200,height=1000")
-       win.document.write('<img src="influencer image/blogger_1.png" alt=""><img src="influencer image/blogger_2.png" alt=""><img src="influencer image/blogger_3.png" alt="">')
+       var win = window.open("","popup","")
+       win.document.write('<h2 style="text-align:center; font-size:50px;">'+this.id+'</h2><img style="width:500px; height:300px;" src="influencer image/'+this.id+'_1.png" alt=""><img style="width:500px; height:300px;"  src="influencer image/'+this.id+'_3.png" alt=""><img style="width:500px; height:300px;"  src="influencer image/'+this.id+'_5.png" alt=""><img style="width:750px; height:450px;"  src="influencer image/'+this.id+'_4.png" alt=""><img style="width:750px; height:450px;"  src="influencer image/'+this.id+'_2.png" alt=""><br><hr>')
        // $("body").append("click!!!<br/>");
      });
      $('.btn-view').click(function(){
@@ -28,6 +28,7 @@ $(document).ready(function() {
         });
      })
 });
+
 
 
 function processData(allText) {

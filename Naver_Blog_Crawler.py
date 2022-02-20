@@ -215,7 +215,7 @@ class NaverBlogCrawler:
         pool.join()
         
         self.post_df = pd.DataFrame(list(li),columns=["Post URL","Post","Image num","sticker num","gif num",
-                                                      "Paragraph num","Comment num","Video num",'Comment detail'])
+                                                      "Paragraph num","Comment num","Video num",'Comment detail','Posting Date'])
         
         return self.post_df
     
@@ -360,15 +360,15 @@ class NaverBlogCrawler:
         #         break
                 
     
-        #블로그 작성 날짜
-        # posting_date_tag = soup.select_one(".se_publishDate")
-        # if posting_date_tag:
-        #     posting_date = posting_date_tag.text
-        # else:
-        #     posting_date = ''
+        # 블로그 작성 날짜
+        posting_date_tag = soup.select_one(".se_publishDate")
+        if posting_date_tag:
+            posting_date = posting_date_tag.text
+        else:
+            posting_date = ''
         
         shared.append([post_link,main_text,image_num,sticker_num,gif_num,
-                       text_num,comment_num,video_num,comment_detail])
+                       text_num,comment_num,video_num,comment_detail,posting_date])
         # dfnew = pd.DataFrame([(post_link,main_text,image_num,sticker_num,gif_num,text_num,comment_num,video_num,viewer_mean,symp_num,ad,posting_date,buddy_num,total_visit,blogger_category,comment_detail)],columns=("Post URL","Post","Image num","sticker num","gif num","Paragraph num","Comment num","Video num","weekly viewer mean","Sympathy num",'AD','Posting Date','Buddy num','Total visit','Blog category','Comment detail'))
         # self.post_df = self.post_df.append(dfnew,ignore_index=True)
             # post_df_idx+=1
