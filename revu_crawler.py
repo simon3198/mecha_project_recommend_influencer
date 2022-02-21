@@ -21,12 +21,23 @@ import re
 import requests
 import xml.etree.ElementTree as ET
 import sys
+from selenium import webdriver
+import chromedriver_autoinstaller
+import os
 
 if __name__ == '__main__':
+        
+    chrome_ver = chromedriver_autoinstaller.get_chrome_version().split('.')[0]
+    driver_path = f'./chromedriver.exe'
+    if os.path.exists(driver_path):
+        print(f"chrom driver is insatlled: {driver_path}")
+    else:
+        print(f"install the chrome driver(ver: {chrome_ver})")
+        chromedriver_autoinstaller.install(True)
     
     id_list=[]
 
-    link= input('revu link를 입력해주세요 : ')
+    link_= input('revu link(숫자만)을 입력해주세요 : ')
     revu_id=input('revu id를 입력해주세요 : ')
     revu_pswd=input('revu password를 입력해주세요 : ')
     # link_list= ['https://report.revu.net/service/campaigns/422541']
@@ -34,6 +45,9 @@ if __name__ == '__main__':
 
     # link = link_list[0]
 
+    link = 'https://report.revu.net/service/campaigns/'+link_
+    
+    
     options = Options()
     options.page_load_strategy = 'normal'
     driver = webdriver.Chrome("./chromedriver")
