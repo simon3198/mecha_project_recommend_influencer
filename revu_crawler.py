@@ -26,7 +26,9 @@ import chromedriver_autoinstaller
 import os
 
 if __name__ == '__main__':
-        
+    os.chdir('../../')
+    current = os.getcwd()
+    print(current)
     chrome_ver = chromedriver_autoinstaller.get_chrome_version().split('.')[0]
     driver_path = f'./chromedriver.exe'
     if os.path.exists(driver_path):

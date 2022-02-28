@@ -2,7 +2,12 @@
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
+import os
 
+os.chdir('../../')
+current = os.getcwd()
+
+print(current)
 choice = input('[보석십자수, 미니어처, 펀치니들, 3d펜, 3d프린터, 가죽공예, 가방만들기, 양모펠트, 프랑스자수, 스크래치북, LED조명, 무드등, 칼림바, 오르골, 발난로, 우산, 캡슐세제, 전자저울, 산소포화도측정기, 소음측정기, 거리측정기, 온습도계, 적외선온도계, 높이측정기, 타이머, 유수분측정기, 아두이노, 라즈베리파이, 마이크로비트, 휴대용선풍기, 스피커, 디퓨저, 기저귀, 파우치, 운동화, 청소세제, 로봇청소기, 전동칫솔, 수납박스, 청소포, 에어프라이어, 거북목베개, 컵홀더, 공기청정기, 진공청소기, 자외선차단제, 섬유유연제, 가습기, 마우스패드]\n========================================================================\n 다음 이이템 들 중 하나를 고르시오 : ')
 
 influencer_item_df = pd.read_csv('./blogger score/all item matrixs_final.csv')
