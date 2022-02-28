@@ -145,7 +145,7 @@ def score_blogger(itemname,data):
 
         # video score 많을 수록 감점
         if data['Video num'][num_]>0:
-            score += 10
+            score += 5
 
         post_df_idx+=1
         # if not isNaN(data['AD'][num_]) and ad ==1:
